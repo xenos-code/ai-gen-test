@@ -65,8 +65,18 @@ def main():
             output_file = "generated_articles/generated_articles.csv"
             df.to_csv(output_file, index=False)
 
-            # Create a zip file with the generated CSV and DOCX files
             with zipfile.ZipFile("generated_articles.zip", "w") as zipf:
                 for folder, _, filenames in os.walk("generated_articles"):
                     for filename in filenames:
-                        file_path = os.path
+                        file_path = os.path.join(folder, filename)
+                        zipf.write(file_path, os.path.basename(file_path))
+
+            st.success("Generated articles and definitions added to 'generated_articles.zip'.")
+
+            with open("generated_articles.zip", "rb") as f:
+                bytes = f.read()
+                b = BytesIO(bytes)
+                st.download_button("Download Generated Articles", b, "generated_articles.zip", "application/zip")
+
+    if __name__ == "__main__":
+        main()
