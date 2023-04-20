@@ -38,13 +38,16 @@ def generate_content(api_key, prompt, sections):
     ]
 
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        max_tokens=3200,
+        model="model",
+        max_tokens=max_tokens,
+        temperature=temperature,
+        presence_penalty=presence_penalty,
+        frequency_penalty=frequency_penalty
         messages=messages
     )
 
     response = completion.choices[0].message.content.strip()
-    print(f"Generated response:\n{response}\n")
+    # print(f"Generated response:\n{response}\n")
     return response
 
 def generate_related_links(df, current_topic):
