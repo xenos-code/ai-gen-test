@@ -57,7 +57,7 @@ def generate_related_links(df, current_topic):
 
     return related_links.to_dict('records')
 
-def generate_article(topic, sections, related_links, definition_only=False):
+def generate_article(api_key, topic, sections, related_links, definition_only=False):
     if definition_only:
         prompt = prompts["definition_prompt"].format(topic)
     else:
