@@ -54,31 +54,30 @@ def main():
             return
 
         df = pd.read_csv(uploaded_file)
-        df.columns = map(str.lower, df.columns)
+        df.columns = map(str.lower, df.columns)  # Convert all column names to lowercase
         df["url path"] = df["keyword / h1"].apply(create_url_path)
         df["full path"] = df["url path"].apply(lambda x: create_full_path(domain, x))
 
         topics = df["topic"].tolist()
         h1_keywords = df["keyword / h1"].tolist()
-        sections = df.iloc[:, section_start_col-1:].values.tolist()
+        sections = df.iloc[:, 7:].values.tolist()
 
         definitions = []
         articles = []
         for topic, sec in zip(topics, sections):
             related_links = generate_related_links(df, topic)
 
-            definition = generate_article(api_key, topic, sec, related_links, definition_only=True)
+            definition = generate_article(topic, sec, related_links, definition_only=True)
             definitions.append(definition)
-            time.sleep(7)
+            time.sleep(7)  # Add a 5-second delay between each query
 
-            article = generate_article(api_key, topic, sec, related_links, definition_only=False)
+            article = generate_article(topic, sec, related_links, definition_only=False)
             articles.append(article)
-            time.sleep(7)
+            time.sleep(7)  # Add a 5-second delay between each query
 
         df["definition"] = definitions
         df["article"] = articles
             
-
         # Create a directory to store the generated DOCX files
         os.makedirs("generated_articles", exist_ok=True)
 
