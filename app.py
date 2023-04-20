@@ -75,7 +75,7 @@ def generate_article(api_key, topic, sections, related_links, definition_only=Fa
             topic, "\n".join(str(sec) for sec in sections), related_links_prompt
         )
 
-    article = generate_content(api_key, prompt, sections)
+    article = generate_content(api_key, model, max_tokens, temperature, presence_penalty, frequency_penalty, prompt, sections):
     return article
 
 class MyHTMLParser(HTMLParser):
