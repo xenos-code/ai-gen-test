@@ -48,35 +48,60 @@ def main():
         h1_keywords = df["keyword / h1"].tolist()
         sections = df.iloc[:, section_start_col - 1:].values.tolist()
 
-        if st.button("Generate Articles"):
-            # [Definitions and article generation logic remains the same]
+    if st.button("Generate Articles"):
+        if not api_key or not uploaded_file:
+            st.error("Please provide all required inputs (API Key, Domain Name, and CSV File).")
+            return
+
+        df = pd.read_csv(uploaded_file)
+        df.columns = map(str.lower, df.columns)
+        df["url path"] = df["keyword / h1"].apply(create_url_path)
+        df["full path"] = df["url path"].apply(lambda x: create_full_path(domain, x))
+
+        topics = df["topic"].tolist()
+        h1_keywords = df["keyword / h1"].tolist()
+        sections = df.iloc[:, section_start_col-1:].values.tolist()
+
+        definitions = []
+        articles = []
+        for topic, sec in zip(topics, sections):
+            related_links = generate_related_links(df, topic)
+
+            definition = generate_article(api_key, topic, sec, related_links, definition_only=True)
+            definitions.append(definition)
+            time.sleep(7)
+
+            article = generate_article(api_key, topic, sec, related_links, definition_only=False)
+            articles.append(article)
+            time.sleep(7)
+
+        df["definition"] = definitions
+        df["article"] = articles
             
-            df["definition"] = definitions
-            df["article"] = articles
 
-            # Create a directory to store the generated DOCX files
-            os.makedirs("generated_articles", exist_ok=True)
+        # Create a directory to store the generated DOCX files
+        os.makedirs("generated_articles", exist_ok=True)
 
-            for idx, (topic, h1_keyword, definition, article) in enumerate(zip(topics, h1_keywords, definitions, articles)):
-                docx_filename = f"generated_articles/{topic.replace(' ', '_')}_article.docx"
-                save_article_as_docx(docx_filename, h1_keyword, definition, article)
+        for idx, (topic, h1_keyword, definition, article) in enumerate(zip(topics, h1_keywords, definitions, articles)):
+            docx_filename = f"generated_articles/{topic.replace(' ', '_')}_article.docx"
+            save_article_as_docx(docx_filename, h1_keyword, definition, article)
 
-            # Save the updated DataFrame to a new CSV file
-            output_file = "generated_articles/generated_articles.csv"
-            df.to_csv(output_file, index=False)
+        # Save the updated DataFrame to a new CSV file
+        output_file = "generated_articles/generated_articles.csv"
+        df.to_csv(output_file, index=False)
 
-            with zipfile.ZipFile("generated_articles.zip", "w") as zipf:
-                for folder, _, filenames in os.walk("generated_articles"):
-                    for filename in filenames:
-                        file_path = os.path.join(folder, filename)
-                        zipf.write(file_path, os.path.basename(file_path))
+        with zipfile.ZipFile("generated_articles.zip", "w") as zipf:
+            for folder, _, filenames in os.walk("generated_articles"):
+                for filename in filenames:
+                    file_path = os.path.join(folder, filename)
+                    zipf.write(file_path, os.path.basename(file_path))
 
-            st.success("Generated articles and definitions added to 'generated_articles.zip'.")
+        st.success("Generated articles and definitions added to 'generated_articles.zip'.")
 
-            with open("generated_articles.zip", "rb") as f:
-                bytes = f.read()
-                b = BytesIO(bytes)
-                st.download_button("Download Generated Articles", b, "generated_articles.zip", "application/zip")
+        with open("generated_articles.zip", "rb") as f:
+            bytes = f.read()
+            b = BytesIO(bytes)
+            st.download_button("Download Generated Articles", b, "generated_articles.zip", "application/zip")
 
 if __name__ == "__main__":
     main()
