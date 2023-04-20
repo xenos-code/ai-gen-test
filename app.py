@@ -25,7 +25,7 @@ def create_url_path(keyword):
 def create_full_path(domain, url_path):
     return f"https://{domain}{url_path}"
 
-def generate_content(api_key, prompt, sections)::
+def generate_content(api_key, prompt, sections):
     openai.api_key = api_key
 
     system_message = prompts["system_message"]
