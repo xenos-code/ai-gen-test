@@ -6,7 +6,7 @@ import time
 import re
 import os
 import zipfile
-import prompts
+from prompts import prompts
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from html.parser import HTMLParser
