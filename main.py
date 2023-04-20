@@ -57,6 +57,7 @@ def main():
 
         definitions = []
         articles = []
+        prompts = []
         for topic, sec in zip(topics, sections):
             related_links = generate_related_links(df, topic)
 
