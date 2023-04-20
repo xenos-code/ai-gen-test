@@ -78,5 +78,5 @@ def main():
                 b = BytesIO(bytes)
                 st.download_button("Download Generated Articles", b, "generated_articles.zip", "application/zip")
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
