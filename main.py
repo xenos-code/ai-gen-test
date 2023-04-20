@@ -38,16 +38,6 @@ def main():
         # Add the input field for the section start column
         section_start_col = st.number_input("Section Start Column (default is 7)", min_value=1, value=7, step=1)
 
-    if domain and uploaded_file:
-        df = pd.read_csv(uploaded_file)
-        df.columns = map(str.lower, df.columns)  # Convert all column names to lowercase
-        df["url path"] = df["keyword / h1"].apply(create_url_path)
-        df["full path"] = df["url path"].apply(lambda x: create_full_path(domain, x))
-
-        topics = df["topic"].tolist()
-        h1_keywords = df["keyword / h1"].tolist()
-        sections = df.iloc[:, section_start_col - 1:].values.tolist()
-
     if st.button("Generate Articles"):
         if not api_key or not uploaded_file:
             st.error("Please provide all required inputs (API Key, Domain Name, and CSV File).")
