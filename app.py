@@ -60,7 +60,7 @@ def generate_related_links(df, current_topic):
 
     return related_links.to_dict('records')
 
-def generate_article(api_key, topic, sections, related_links, definition_only=False):
+def generate_article(api_key, model, max_tokens, temperature, presence_penalty, frequency_penalty, prompt, sections, definition_only=False):
     if definition_only:
         prompt = prompts["definition_prompt"].format(topic)
     else:
