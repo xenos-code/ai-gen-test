@@ -4,7 +4,7 @@ from io import BytesIO
 import streamlit as st
 import pandas as pd
 import time
-import io
+import os
 from prompts import prompts
 from app import (
     create_url_path,
