@@ -1,16 +1,19 @@
 # main.py
 
-import streamlit as st
-from app import (
-    create_url_path, create_full_path, generate_content,
-    generate_related_links, generate_article, MyHTMLParser, save_article_as_docx
-)
-from expanders import expanders
-from prompts import prompts
-import pandas as pd
-import os
-import zipfile
 from io import BytesIO
+import streamlit as st
+import pandas as pd
+from app import (
+    create_url_path,
+    create_full_path,
+    generate_content,
+    generate_related_links,
+    generate_article,
+    MyHTMLParser,
+    save_article_as_docx
+)
+from expanders import placeholder_text
+
 
 
 def main():
