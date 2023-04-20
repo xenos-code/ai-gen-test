@@ -1,9 +1,14 @@
 # app_functions.py
 
-import re
-import pandas as pd
 import openai
-from prompts import prompts
+import pandas as pd
+import time
+import re
+import os
+import zipfile
+from docx import Document
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from html.parser import HTMLParser
 
 def create_url_path(keyword):
     url_path = keyword.lower()
