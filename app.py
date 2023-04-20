@@ -42,7 +42,7 @@ def generate_content(api_key, prompt, sections):
         max_tokens=max_tokens,
         temperature=temperature,
         presence_penalty=presence_penalty,
-        frequency_penalty=frequency_penalty
+        frequency_penalty=frequency_penalty,
         messages=messages
     )
 
