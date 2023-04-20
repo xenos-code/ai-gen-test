@@ -1,7 +1,7 @@
 # main.py
 
 import streamlit as st
-from app_functions import (
+from app import (
     create_url_path, create_full_path, generate_content,
     generate_related_links, generate_article, MyHTMLParser, save_article_as_docx
 )
