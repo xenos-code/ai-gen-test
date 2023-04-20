@@ -12,7 +12,7 @@ from app import (
     MyHTMLParser,
     save_article_as_docx
 )
-from expanders import placeholder_text
+from expanders import expanders
 
 
 
