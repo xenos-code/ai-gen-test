@@ -3,11 +3,7 @@
 from io import BytesIO
 import streamlit as st
 import pandas as pd
-import time
-import re
-import os
-import zipfile
-from prompts import prompts
+import prompts
 from app import (
     create_url_path,
     create_full_path,
@@ -18,6 +14,8 @@ from app import (
     save_article_as_docx
 )
 from expanders import expanders
+
+
 
 def main():
     st.set_page_config(page_title="Marketing Article Generator")
@@ -57,17 +55,16 @@ def main():
 
         definitions = []
         articles = []
-        prompts = []
         for topic, sec in zip(topics, sections):
             related_links = generate_related_links(df, topic)
 
-            definition = generate_article(api_key, topic, sec, related_links, model, max_tokens, temperature, presence_penalty, frequency_penalty, prompt, sections, definition_only=True)
+            definition = generate_article(topic, sec, related_links, definition_only=True)
             definitions.append(definition)
-            time.sleep(7)
+            time.sleep(7)  # Add a 5-second delay between each query
 
-            article = generate_article(api_key, topic, sec, related_links, model, max_tokens, temperature, presence_penalty, frequency_penalty, prompt, sections, definition_only=False)
+            article = generate_article(topic, sec, related_links, definition_only=False)
             articles.append(article)
-            time.sleep(7)
+            time.sleep(7)  # Add a 5-second delay between each query
 
         df["definition"] = definitions
         df["article"] = articles
