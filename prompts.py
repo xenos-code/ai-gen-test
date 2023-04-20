@@ -18,7 +18,7 @@ Make sure to use clear, concise language and provide practical advice, examples,
         
         """
 Please write an informative article about the marketing term '{}' following the given outline:\n\n{}\n
-Please provide the output in semantic HTML format (there is no need for the H1)."""),
+Please provide the output in semantic HTML format (there is no need for the H1).{}"""),
     
     "related_links_prompt": (
         
