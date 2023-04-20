@@ -60,11 +60,11 @@ def main():
         for topic, sec in zip(topics, sections):
             related_links = generate_related_links(df, topic)
 
-            definition = generate_article(api_key, topic, sec, related_links, definition_only=True)
+            definition = generate_article(api_key, topic, sec, related_links, model, max_tokens, temperature, presence_penalty, frequency_penalty, prompt, sections, definition_only=True)
             definitions.append(definition)
             time.sleep(7)
 
-            article = generate_article(api_key, topic, sec, related_links, definition_only=False)
+            article = generate_article(api_key, topic, sec, related_links, model, max_tokens, temperature, presence_penalty, frequency_penalty, prompt, sections, definition_only=False)
             articles.append(article)
             time.sleep(7)
 
