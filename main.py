@@ -1,6 +1,7 @@
 # main.py
 
 from io import BytesIO
+import tempfile
 import streamlit as st
 import pandas as pd
 import time
@@ -73,29 +74,32 @@ def main():
         df["definition"] = definitions
         df["article"] = articles
             
-        # Create a directory to store the generated DOCX files
-        os.makedirs("generated_articles", exist_ok=True)
+        # Create a temporary directory to store the generated DOCX files
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_dir = os.path.join(temp_dir, f"article_batch_{timestamp}")
+            os.makedirs(output_dir)
 
-        for idx, (topic, h1_keyword, definition, article) in enumerate(zip(topics, h1_keywords, definitions, articles)):
-            docx_filename = f"generated_articles/{topic.replace(' ', '_')}_article.docx"
-            save_article_as_docx(docx_filename, h1_keyword, definition, article)
+            for idx, (topic, h1_keyword, definition, article) in enumerate(zip(topics, h1_keywords, definitions, articles)):
+                docx_filename = f"{output_dir}/{topic.replace(' ', '_')}_article.docx"
+                save_article_as_docx(docx_filename, h1_keyword, definition, article)
 
-        # Save the updated DataFrame to a new CSV file
-        output_file = "generated_articles/generated_articles.csv"
-        df.to_csv(output_file, index=False)
+            # Save the updated DataFrame to a new CSV file
+            output_file = f"{output_dir}/article_batch_{timestamp}.csv"
+            df.to_csv(output_file, index=False)
 
-        with zipfile.ZipFile("generated_articles.zip", "w") as zipf:
-            for folder, _, filenames in os.walk("generated_articles"):
-                for filename in filenames:
-                    file_path = os.path.join(folder, filename)
-                    zipf.write(file_path, os.path.basename(file_path))
+            with zipfile.ZipFile(f"{temp_dir}/article_batch_{timestamp}.zip", "w") as zipf:
+                for folder, _, filenames in os.walk(output_dir):
+                    for filename in filenames:
+                        file_path = os.path.join(folder, filename)
+                        zipf.write(file_path, os.path.basename(file_path))
 
-        st.success("Generated articles and definitions added to 'generated_articles.zip'.")
+            st.success(f"Generated articles and definitions added to 'article_batch_{timestamp}.zip'.")
 
-        with open("generated_articles.zip", "rb") as f:
-            bytes = f.read()
-            b = BytesIO(bytes)
-            st.download_button("Download Generated Articles", b, "generated_articles.zip", "application/zip")
+            with open(f"{temp_dir}/article_batch_{timestamp}.zip", "rb") as f:
+                bytes = f.read()
+                b = BytesIO(bytes)
+                st.download_button("Download Generated Articles", b, f"article_batch_{timestamp}.zip", "application/zip")
 
 if __name__ == "__main__":
     main()
