@@ -1,12 +1,12 @@
 # app_functions.py
 
-import openai
 import pandas as pd
+import streamlit as st
 import time
 import re
 import os
 import zipfile
-import streamlit
+import openai
 from prompts import prompts
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
