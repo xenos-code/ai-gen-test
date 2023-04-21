@@ -71,6 +71,13 @@ def generate_related_links(df, current_topic):
 
     return related_links.to_dict('records')
 
+def calculate_max_prompt_tokens(model, prompt_length):
+    max_model_tokens = {
+        'gpt-4': 8192,
+        'gpt-3.5-turbo': 4096,
+    }
+    return max_model_tokens[model] - prompt_length
+
 def generate_article(api_key, topic, sections, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False):
     if definition_only:
         prompt = prompts["definition_prompt"].format(topic)
