@@ -164,12 +164,11 @@ def save_article_as_docx(filename, title, definition, content):
             level = int(item["type"][1])
             doc.add_heading(item["content"], level=level)
         elif item["type"] == "p":
-            doc.add_paragraph(item["content"])
+            p = doc.add_paragraph(item["content"])
         elif item["type"] == "li":
             style = "ListBullet" if item["parent"] == "ul" else "ListNumber"
-            doc.add_paragraph(item["content"], style=style)
+            p = doc.add_paragraph(item["content"], style=style)
         elif item["type"] == "a":
-            p = doc.add_paragraph()
             add_hyperlink(p, item["content"], item["href"])
 
     doc.save(filename)
