@@ -40,7 +40,7 @@ def generate_content(api_key, prompt, sections, temperature, presence_penalty, f
     
     print(f"API Call Parameters:")
     print(f"API Key: {api_key}")
-    print(f"GPT Model: {model}"
+    print(f"GPT Model: {model}")
     print(f"Prompt: {prompt}")
     print(f"Sections: {sections}")
     print(f"Temperature: {temperature}")
