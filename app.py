@@ -11,10 +11,10 @@ from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from html.parser import HTMLParser
 
-def render_expanders():
-    for key, expander_info in expanders.items():
-        with st.expander(expander_info["title"]):
-            st.markdown(expander_info["content"])
+def render_expanders(expanders):
+    for key, value in expanders.items():
+        with st.expander(value["title"]):
+            st.markdown(value["content"])
 
 def create_url_path(keyword):
     url_path = keyword.lower()
