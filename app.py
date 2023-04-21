@@ -60,7 +60,7 @@ def generate_related_links(df, current_topic):
 
     return related_links.to_dict('records')
 
-def generate_article(api_key, topic, sections, related_links, definition_only=False):
+def generate_article(api_key, topic, sections, related_links, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False):
     if definition_only:
         prompt = prompts["definition_prompt"].format(topic)
     else:
@@ -75,7 +75,7 @@ def generate_article(api_key, topic, sections, related_links, definition_only=Fa
             topic, "\n".join(str(sec) for sec in sections), related_links_prompt
         )
 
-    article = generate_content(api_key, prompt, sections)
+    article = generate_content(api_key, prompt, sections, temperature, presence_penalty, frequency_penalty, max_tokens)
     return article
 
 class MyHTMLParser(HTMLParser):
