@@ -61,6 +61,13 @@ def generate_content(api_key, prompt, sections, model, temperature, presence_pen
     # print(f"Generated response:\n{response}\n")
     return response
 
+def calculate_max_prompt_tokens(model, prompt_length):
+    max_model_tokens = {
+        'gpt-4': 8192,
+        'gpt-3.5-turbo': 4096,
+    }
+    return max_model_tokens[model] - prompt_length
+
 def generate_related_links(df, current_topic):
     current_category = df.loc[df['topic'] == current_topic, 'category'].values[0]
     current_full_path = df.loc[df['topic'] == current_topic, 'full path'].values[0]
