@@ -87,7 +87,7 @@ def generate_article(api_key, topic, sections, related_links, model, temperature
         )
 
     article = generate_content(api_key, prompt, sections, model, temperature, presence_penalty, frequency_penalty, max_tokens)
-    return article
+    return article, len(prompt)
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
