@@ -28,7 +28,7 @@ from expanders import expanders
 def main():
     st.set_page_config(page_title="AI Content Factory", page_icon=None, layout='centered', initial_sidebar_state='expanded')
     st.title("AI Content Factory")
-    st.subheader("A powerful AI-driven content generation tool for creating high-quality articles at scale.")
+    st.write("A powerful AI-driven content generation tool for creating high-quality articles at scale.")
     render_expanders(expanders)
 
     with st.sidebar:
