@@ -9,7 +9,7 @@ import re
 import os
 import zipfile
 import datetime
-from datetime import datetime
+# from datetime import datetime
 from prompts import prompts
 from app import (
     create_url_path,
@@ -77,7 +77,7 @@ def main():
         df["article"] = articles
             
         # Create a temporary directory to store the generated DOCX files
-        timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         with tempfile.TemporaryDirectory() as temp_dir:
             output_dir = os.path.join(temp_dir, f"article_batch_{timestamp}")
             os.makedirs(output_dir)
