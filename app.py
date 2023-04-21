@@ -25,7 +25,7 @@ def create_url_path(keyword):
 def create_full_path(domain, url_path):
     return f"https://{domain}{url_path}"
 
-def generate_content(api_key, prompt, sections, model, temperature, presence_penalty, frequency_penalty, max_tokens):
+def generate_content(api_key, prompt, sections):
     openai.api_key = api_key
 
     system_message = prompts["system_message"]
@@ -36,25 +36,14 @@ def generate_content(api_key, prompt, sections, model, temperature, presence_pen
         {"role": "system", "content": system_message},
         {"role": "user", "content": prompt}
     ]
-    
-    
-    print(f"API Call Parameters:")
-    print(f"API Key: {api_key}")
-    print(f"GPT Model: {model}")
-    print(f"Prompt: {prompt}")
-    print(f"Sections: {sections}")
-    print(f"Temperature: {temperature}")
-    print(f"Presence Penalty: {presence_penalty}")
-    print(f"Frequency Penalty: {frequency_penalty}")
-    print(f"Max Tokens: {max_tokens}")
 
     completion = openai.ChatCompletion.create(
-        model=model,
-        max_tokens=max_tokens,
-        temperature=temperature,
-        presence_penalty=presence_penalty,
-        frequency_penalty=frequency_penalty,
-        messages=messages,
+        model= "gpt-3.5-turbo",
+        max_tokens = 3200,
+        # temperature = temperature, 
+        # presence_penalty = presence_penalty,
+        # frequency_penalty = frequency_penalty,
+        messages = messages
     )
 
     response = completion.choices[0].message.content.strip()
@@ -71,7 +60,7 @@ def generate_related_links(df, current_topic):
 
     return related_links.to_dict('records')
 
-def generate_article(api_key, topic, sections, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False):
+def generate_article(api_key, topic, sections, related_links, definition_only=False):
     if definition_only:
         prompt = prompts["definition_prompt"].format(topic)
     else:
@@ -86,7 +75,7 @@ def generate_article(api_key, topic, sections, related_links, model, temperature
             topic, "\n".join(str(sec) for sec in sections), related_links_prompt
         )
 
-    article = generate_content(api_key, prompt, sections, model, temperature, presence_penalty, frequency_penalty, max_tokens)
+    article = generate_content(api_key, prompt, sections)
     return article
 
 class MyHTMLParser(HTMLParser):
