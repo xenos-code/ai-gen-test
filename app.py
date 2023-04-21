@@ -11,6 +11,8 @@ from prompts import prompts
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from html.parser import HTMLParser
+from docx.enum.dml import MSO_THEME_COLOR_INDEX
+from docx.oxml.ns import qn
 
 def render_expanders(expanders):
     for key, value in expanders.items():
@@ -123,7 +125,29 @@ class MyHTMLParser(HTMLParser):
             self.text.append({"type": self.current_tag, "content": data.strip(), "parent": self.parent_tag})
         elif self.current_tag == "a":
             self.text.append({"type": self.current_tag, "content": data.strip(), "href": self.current_href})
+                        
+def add_hyperlink(paragraph, url, text, color, underline):
+    part = paragraph.part
+    r_id = part.relate_to(url, docx.opc.constants.RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
 
+    hyperlink = docx.oxml.shared.OxmlElement("w:hyperlink")
+    hyperlink.set(docx.oxml.shared.qn("r:id"), r_id, )
+
+    new_run = docx.oxml.shared.OxmlElement("w:r")
+    rPr = docx.oxml.shared.OxmlElement("w:rPr")
+
+    new_run.append(rPr)
+    new_run.text = text
+    hyperlink.append(new_run)
+
+    r = paragraph.add_run()
+    r._r.append(hyperlink)
+
+    r.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
+    if underline:
+        r.font.underline = True
+
+    return hyperlink
 
 def save_article_as_docx(filename, title, definition, content):
     # Parse the HTML content
@@ -148,8 +172,7 @@ def save_article_as_docx(filename, title, definition, content):
             doc.add_paragraph(item["content"], style=style)
         elif item["type"] == "a":
             p = doc.add_paragraph()
-            r = p.add_run(item["content"])
-            r.hyperlink = item["href"]
+            add_hyperlink(p, item["href"], item["content"], '0000FF', True)
 
     # Save the document to a file
     doc.save(filename)
