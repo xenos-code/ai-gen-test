@@ -9,7 +9,6 @@ import zipfile
 import openai
 from prompts import prompts
 from docx import Document
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from docx.oxml.shared import OxmlElement, qn
 from docx.opc.constants import RELATIONSHIP_TYPE
@@ -128,7 +127,8 @@ class MyHTMLParser(HTMLParser):
             self.text.append({"type": self.current_tag, "content": data.strip(), "href": self.current_href})
 
 
-def add_hyperlink(paragraph, url, text, color, underline):
+
+def add_hyperlink(paragraph, text, url):
     part = paragraph.part
     r_id = part.relate_to(url, RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
 
@@ -138,36 +138,27 @@ def add_hyperlink(paragraph, url, text, color, underline):
     new_run = OxmlElement('w:r')
     rPr = OxmlElement('w:rPr')
 
-    if color is not None:
-        c = OxmlElement('w:color')
-        c.set(qn('w:val'), color)
-        rPr.append(c)
-
-    if not underline:
-        u = OxmlElement('w:u')
-        u.set(qn('w:val'), 'none')
-        rPr.append(u)
-
     new_run.append(rPr)
     new_run.text = text
     hyperlink.append(new_run)
 
-    paragraph._p.append(hyperlink)
+    r = paragraph.add_run()
+    r._r.append(hyperlink)
+
+    r.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
+    r.font.underline = True
 
     return hyperlink
 
 def save_article_as_docx(filename, title, definition, content):
-    # Parse the HTML content
     parser = MyHTMLParser()
     parser.feed(content)
     parsed_content = parser.text
 
-    # Create a new DOCX document
     doc = Document()
     doc.add_heading(title, level=1)
     doc.add_paragraph(definition)
 
-    # Add parsed content to the DOCX document
     for item in parsed_content:
         if item["type"] in ["h2", "h3", "h4"]:
             level = int(item["type"][1])
@@ -179,7 +170,6 @@ def save_article_as_docx(filename, title, definition, content):
             doc.add_paragraph(item["content"], style=style)
         elif item["type"] == "a":
             p = doc.add_paragraph()
-            add_hyperlink(p, item["href"], item["content"], None, True)
+            add_hyperlink(p, item["content"], item["href"])
 
-    # Save the document to a file
     doc.save(filename)
