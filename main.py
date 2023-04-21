@@ -18,7 +18,8 @@ from app import (
     generate_related_links,
     generate_article,
     MyHTMLParser,
-    save_article_as_docx
+    save_article_as_docx,
+    render_expanders
 )
 from expanders import expanders
 
@@ -27,6 +28,7 @@ from expanders import expanders
 def main():
     st.set_page_config(page_title="Marketing Article Generator")
     st.title("Marketing Article Generator")
+    render_expanders(expanders)
 
     with st.sidebar:
         st.header("Settings")
