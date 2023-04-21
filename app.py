@@ -9,11 +9,8 @@ import zipfile
 import openai
 from prompts import prompts
 from docx import Document
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from html.parser import HTMLParser
-from docxtpl import DocxTemplate, InlineImage, RichText
-# from docx.enum.dml import MSO_THEME_COLOR_INDEX
-# from docx.oxml.ns import qn
-# from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 def render_expanders(expanders):
     for key, value in expanders.items():
@@ -126,7 +123,7 @@ class MyHTMLParser(HTMLParser):
             self.text.append({"type": self.current_tag, "content": data.strip(), "parent": self.parent_tag})
         elif self.current_tag == "a":
             self.text.append({"type": self.current_tag, "content": data.strip(), "href": self.current_href})
-                        
+
 
 def save_article_as_docx(filename, title, definition, content):
     # Parse the HTML content
@@ -135,7 +132,7 @@ def save_article_as_docx(filename, title, definition, content):
     parsed_content = parser.text
 
     # Create a new DOCX document
-    doc = DocxTemplate()
+    doc = Document()
     doc.add_heading(title, level=1)
     doc.add_paragraph(definition)
 
@@ -150,10 +147,9 @@ def save_article_as_docx(filename, title, definition, content):
             style = "ListBullet" if item["parent"] == "ul" else "ListNumber"
             doc.add_paragraph(item["content"], style=style)
         elif item["type"] == "a":
-            rt = RichText()
-            rt.add(item["content"], url_id=doc.build_url_id(item["href"]))
             p = doc.add_paragraph()
-            p.add_run(rt)
+            r = p.add_run(item["content"])
+            r.hyperlink = item["href"]
 
     # Save the document to a file
     doc.save(filename)
