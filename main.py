@@ -18,6 +18,7 @@ from app import (
     generate_related_links,
     generate_article,
     MyHTMLParser,
+    calculate_max_prompt_tokens,
     save_article_as_docx
 )
 from expanders import expanders
@@ -65,13 +66,16 @@ def main():
         for topic, sec in zip(topics, sections):
             related_links = generate_related_links(df, topic)
 
-            definition = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=True)
+            max_prompt_tokens = calculate_max_prompt_tokens(model, definition_prompt_length)
+            definition, definition_prompt_length = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=True)
             definitions.append(definition)
             time.sleep(7)  # Add a 5-second delay between each query
 
-            article = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False)
+            max_prompt_tokens = calculate_max_prompt_tokens(model, article_prompt_length)
+            article, article_prompt_length = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False)
             articles.append(article)
             time.sleep(7)  # Add a 5-second delay between each query
+
 
         df["definition"] = definitions
         df["article"] = articles
