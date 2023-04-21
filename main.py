@@ -63,17 +63,20 @@ def main():
 
         definitions = []
         articles = []
+        definition_prompt_lengths = []
+        article_prompt_lengths = []
+
         for topic, sec in zip(topics, sections):
             related_links = generate_related_links(df, topic)
 
-            max_prompt_tokens = calculate_max_prompt_tokens(model, definition_prompt_length)
             definition, definition_prompt_length = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=True)
             definitions.append(definition)
+            definition_prompt_lengths.append(definition_prompt_length)
             time.sleep(7)  # Add a 5-second delay between each query
 
-            max_prompt_tokens = calculate_max_prompt_tokens(model, article_prompt_length)
             article, article_prompt_length = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False)
             articles.append(article)
+            article_prompt_lengths.append(article_prompt_length)
             time.sleep(7)  # Add a 5-second delay between each query
 
 
