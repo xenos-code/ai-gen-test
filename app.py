@@ -36,6 +36,16 @@ def generate_content(api_key, prompt, sections, temperature, presence_penalty, f
         {"role": "system", "content": system_message},
         {"role": "user", "content": prompt}
     ]
+    
+    
+    print(f"API Call Parameters:")
+    print(f"API Key: {api_key}")
+    print(f"Prompt: {prompt}")
+    print(f"Sections: {sections}")
+    print(f"Temperature: {temperature}")
+    print(f"Presence Penalty: {presence_penalty}")
+    print(f"Frequency Penalty: {frequency_penalty}")
+    print(f"Max Tokens: {max_tokens}")
 
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
