@@ -25,7 +25,7 @@ def create_url_path(keyword):
 def create_full_path(domain, url_path):
     return f"https://{domain}{url_path}"
 
-def generate_content(api_key, prompt, sections):
+def generate_content(api_key, prompt, sections, temperature, presence_penalty, frequency_penalty, max_tokens):
     openai.api_key = api_key
 
     system_message = prompts["system_message"]
@@ -38,12 +38,12 @@ def generate_content(api_key, prompt, sections):
     ]
 
     completion = openai.ChatCompletion.create(
-        model= "gpt-3.5-turbo",
-        max_tokens = 3200,
-        # temperature = temperature, 
-        # presence_penalty = presence_penalty,
-        # frequency_penalty = frequency_penalty,
-        messages = messages
+        model="gpt-3.5-turbo",
+        max_tokens=max_tokens,
+        temperature=temperature,
+        presence_penalty=presence_penalty,
+        frequency_penalty=frequency_penalty,
+        messages=messages,
     )
 
     response = completion.choices[0].message.content.strip()
