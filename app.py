@@ -116,6 +116,8 @@ class MyHTMLParser(HTMLParser):
     def handle_endtag(self, tag):
         if tag == self.parent_tag:
             self.parent_tag = None
+        if tag == "a":
+            self.current_href = None
         self.current_tag = None
 
     def handle_data(self, data):
@@ -124,9 +126,7 @@ class MyHTMLParser(HTMLParser):
         elif self.current_tag == "li":
             self.text.append({"type": self.current_tag, "content": data.strip(), "parent": self.parent_tag})
         elif self.current_tag == "a":
-            self.text.append({"type": self.current_tag, "content": data.strip(), "href": self.current_href})
-
-
+            self.text.append({"type": self.current_tag, "content": data.strip(), "href": self.current_href, "parent": self.parent_tag})
 
 def add_hyperlink(paragraph, text, url):
     part = paragraph.part
