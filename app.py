@@ -25,7 +25,7 @@ def create_url_path(keyword):
 def create_full_path(domain, url_path):
     return f"https://{domain}{url_path}"
 
-def generate_content(api_key, prompt, sections, model, temperature, presence_penalty, frequency_penalty, max_prompt_tokens):
+def generate_content(api_key, prompt, sections, model, temperature, presence_penalty, frequency_penalty, max_tokens):
     openai.api_key = api_key
 
     system_message = prompts["system_message"]
@@ -50,7 +50,7 @@ def generate_content(api_key, prompt, sections, model, temperature, presence_pen
 
     completion = openai.ChatCompletion.create(
         model=model,
-        max_tokens=max_prompt_tokens,
+        max_tokens=max_tokens,
         temperature=temperature,
         presence_penalty=presence_penalty,
         frequency_penalty=frequency_penalty,
@@ -60,13 +60,6 @@ def generate_content(api_key, prompt, sections, model, temperature, presence_pen
     response = completion.choices[0].message.content.strip()
     # print(f"Generated response:\n{response}\n")
     return response
-
-def calculate_max_prompt_tokens(model, prompt_length):
-    max_model_tokens = {
-        'gpt-4': 8192,
-        'gpt-3.5-turbo': 4096,
-    }
-    return max_model_tokens[model] - prompt_length
 
 def generate_related_links(df, current_topic):
     current_category = df.loc[df['topic'] == current_topic, 'category'].values[0]
@@ -94,7 +87,7 @@ def generate_article(api_key, topic, sections, related_links, model, temperature
         )
 
     article = generate_content(api_key, prompt, sections, model, temperature, presence_penalty, frequency_penalty, max_tokens)
-    return article, len(prompt)
+    return article
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
