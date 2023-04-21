@@ -6,6 +6,7 @@ import time
 import re
 import os
 import zipfile
+import streamlit
 from prompts import prompts
 from docx import Document
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
