@@ -63,21 +63,24 @@ def main():
         h1_keywords = df["keyword / h1"].tolist()
         sections = df.iloc[:, 7:].values.tolist()
 
+        progress_text = "Generating articles. Please wait..."
+        my_bar = st.progress(0)
+        total_items = len(topics) * 2
         definitions = []
         articles = []
-        for topic, sec in zip(topics, sections):
+        for idx, (topic, sec) in enumerate(zip(topics, sections)):
             related_links = generate_related_links(df, topic)
 
             definition = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=True)
             definitions.append(definition)
-            time.sleep(7)  # Add a 5-second delay between each query
+            time.sleep(7)
+            my_bar.progress((((idx + 1) * 2 - 1) / total_items * 100) / 100)
 
             article = generate_article(api_key, topic, sec, related_links, model, temperature, presence_penalty, frequency_penalty, max_tokens, definition_only=False)
             articles.append(article)
-            time.sleep(7)  # Add a 5-second delay between each query
+            time.sleep(7)
+            my_bar.progress((((idx + 1) * 2) / total_items * 100) / 100)
 
-        df["definition"] = definitions
-        df["article"] = articles
             
         # Create a temporary directory to store the generated DOCX files
         timestamp = dt.now().strftime('%Y-%m-%d_%H-%M-%S')
