@@ -1,5 +1,8 @@
 # prompts.py
 
+# system_message = The system message helps set the behavior of the assistant.
+
+
 prompts = {
     "system_message": (
         
