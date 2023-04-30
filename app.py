@@ -171,4 +171,6 @@ def save_article_as_docx(filename, title, definition, content):
         elif item["type"] == "a":
             add_hyperlink(p, item["content"], item["href"])
 
+    # Create directories if they don't exist and save the file
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     doc.save(filename)
